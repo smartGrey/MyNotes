@@ -4,4 +4,4 @@
 - 移动至脚本存放的目录 - `cd "$(dirname "$0")"`
 
 ## 命令
-- 新建目录（上级目录不存在时自动创建） - `mkdir -p dir_name`
+- 新建目录（上级目录不存在时自动创建） - `mkdir -p dir_name_outer1/dir_name_outer2/dir_name`
