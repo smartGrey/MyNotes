@@ -1,0 +1,48 @@
+<html>
+<head>
+    <title>provider</title>
+</head>
+<body>
+    <div id="app"></div>
+
+
+    <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+
+
+    <script>
+        const e = React.createElement;
+        const context1 = React.createContext('default_content1');
+        const context2 = React.createContext('default_content2');
+
+        class Inner extends React.Component {
+            static contextType = context2;
+            render() {
+                console.log(this.context)
+                return this.context
+            }
+        }
+
+
+        class Mid extends React.Component {
+            render() {return e('div', {}, e(Inner))}
+        }
+
+
+        class App extends React.Component {
+            render() {
+                return e(
+                    context1.Provider,
+                    { value: 'top_content1' },
+                    e(
+                        context2.Provider,
+                        { value: 'top_content2' },
+                        e(Mid)
+                    )
+                )
+            }
+        }
+        ReactDOM.render(e(App), document.querySelector('#app'));
+    </script>
+</body>
+</html>

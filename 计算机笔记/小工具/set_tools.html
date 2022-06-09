@@ -1,0 +1,70 @@
+<html lang="zh-cn">
+<head>
+  <title>集合运算器</title>
+  <style>
+    * {
+      font-size: 22;
+    }
+    html,body {
+      height: 100%;
+      margin: 0;
+      background: lightgray;
+    }
+    textarea {
+      width: 400px;
+      height: 95%;
+      margin: 10px;
+    }
+    .col {
+      display: inline-block;
+      vertical-align: middle;
+      text-align: center;
+    }
+    .operates > button {
+      display: block;
+      margin: 0 auto;
+      padding: 8px 14px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .operates > button:not(:first-child) {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <textarea id="A" class="col"></textarea>
+  <div class="col operates">
+    <button>∪</button>
+    <button>∩</button>
+    <button>A-B</button>
+    <button>B-A</button>
+    <button>(A∪B)-(A∩B)</button>
+  </div>
+  <textarea id="B" class="col"></textarea>
+  <span class="col">=</span>
+  <textarea id="C" class="col"></textarea>
+<script>
+  const operates = [
+    ({all}) => all,
+    ({a,bSet}) => a.filter(e => bSet.has(e)),
+    ({a,bSet}) => a.filter(e => !bSet.has(e)),
+    ({b,aSet}) => b.filter(e => !aSet.has(e)),
+    ({a,bSet,all}) => all.filter(e => !new Set(a.filter(a_val => bSet.has(a_val))).has(e)),
+  ];
+  document.onclick= ({ target }) => {
+    const btn_parent = target.parentNode;
+    if (btn_parent.className!=='col operates') return;
+    const btn_index = Array.prototype.indexOf.call(btn_parent.children,target);
+    const a_vals = document.getElementById('A').value.split(/\s+/);
+    const b_vals = document.getElementById('B').value.split(/\s+/);
+    const all_vals_set = new Set([...a_vals, ...b_vals]);
+    document.getElementById('C').value=Array.from(new Set(operates[btn_index]({
+      a: a_vals, b: b_vals,
+      aSet: new Set(a_vals), bSet: new Set(b_vals),
+      all: Array.from(all_vals_set), allSet: all_vals_set,
+    }))).filter(e => Boolean(e)).join('\n');
+  };
+</script>
+</body>
+</html>
